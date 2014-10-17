@@ -327,11 +327,11 @@ NetCommonsApp.controller('Notepads',
           url: $scope.POST_FORM_URL + $scope.frameId + '/' + Math.random(),
           data: postParams,
           success: function(json, status, headers, config) {
-            $scope.notepad = json.data;
-            $($scope.contentAttrId + ' .nc-notepads-title')
-                    .html(json.data.Notepad.title);
-            $($scope.contentAttrId + ' .nc-notepads-content')
-                    .html(json.data.Notepad.content);
+//            $scope.notepad = json.data;
+//            $($scope.contentAttrId + ' .nc-notepads-title')
+//                    .html(json.data.Notepad.title);
+//            $($scope.contentAttrId + ' .nc-notepads-content')
+//                    .html(json.data.Notepad.content);
             $scope.showResult('success', json.message);
           },
           error: function(json, status, headers, config) {

@@ -32,6 +32,17 @@ class NotepadsController extends NotepadsAppController {
 	);
 
 /**
+ * use component
+ *
+ * @var array
+ */
+	public $components = array(
+		'NetCommons.NetCommonsBlock',
+		'NetCommons.NetCommonsFrame',
+		'NetCommons.NetCommonsRoomRole',
+	);
+
+/**
  * beforeFilter
  *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
@@ -40,6 +51,18 @@ class NotepadsController extends NotepadsAppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->allow();
+
+		$frameId = (isset($this->params['pass'][0]) ? (int)$this->params['pass'][0] : 0);
+		//Frameのデータをviewにセット
+		if (! $this->NetCommonsFrame->setView($this, $frameId)) {
+			$this->response->statusCode(400);
+			return;
+		}
+		//Roleのデータをviewにセット
+		if (! $this->NetCommonsRoomRole->setView($this)) {
+			$this->response->statusCode(400);
+			return;
+		}
 	}
 
 /**
@@ -51,12 +74,6 @@ class NotepadsController extends NotepadsAppController {
  * @return CakeResponse
  */
 	public function index($frameId = 0, $lang = '') {
-		//フレーム初期化処理
-		if (! $this->_initializeFrame($frameId, $lang)) {
-			$this->response->statusCode(400);
-			return $this->render(false);
-		}
-
 		//コンテンツの取得
 		$notepad = $this->Notepad->getContent($this->viewVars['blockId'],
 								$this->viewVars['languageId'],
@@ -112,12 +129,6 @@ class NotepadsController extends NotepadsAppController {
 		$this->layout = false;
 		$this->isSetting = true;
 
-		//フレーム初期化処理
-		if (! $this->_initializeFrame($frameId)) {
-			$this->response->statusCode(400);
-			return $this->render(false);
-		}
-
 		//権限がない場合
 		if (! $this->viewVars['contentEditable']) {
 			return $this->render(false);
@@ -147,15 +158,21 @@ class NotepadsController extends NotepadsAppController {
  * @return CakeResponse
  */
 	public function edit($frameId = 0) {
-		if (! $this->request->isPost()) {
-			return $this->_renderJson(400, __d('notepads', 'I failed to save'));
+		if ($this->response->statusCode() !== 200) {
+			$statusCode = $this->response->statusCode();
+			$message = __d('notepads', 'Save failed.');
+			return $this->NetCommonsFrame->renderJson($this, $statusCode, $message);
 		}
 
-		//フレーム初期化処理
-		$this->_initializeFrame($frameId);
+		if (! $this->request->isPost()) {
+			$message = __d('notepads', 'Save failed.');
+			return $this->NetCommonsFrame->renderJson($this, 400, $message);
+		}
+
 		if (! $this->viewVars['contentEditable']) {
 			//権限エラー
-			return $this->_renderJson(403, __d('notepads', 'I failed to save'));
+			$message = __d('notepads', 'Save failed.');
+			return $this->NetCommonsFrame->renderJson($this, 403, $message);
 		}
 
 		//保存
@@ -164,12 +181,15 @@ class NotepadsController extends NotepadsAppController {
 			$frameId,
 			$this->viewVars['roomId']
 		);
+
 		//成功結果を返す
 		if (! $rtn) {
 			//失敗結果を返す
-			return $this->_renderJson(500, __d('notepads', 'I failed to save'), $rtn);
+			$message = __d('notepads', 'Save failed.');
+			return $this->NetCommonsFrame->renderJson($this, 500, $message);
 		} else {
-			return $this->_renderJson(200, __d('notepads', 'Saved'), $rtn);
+			$message = __d('notepads', 'Success saved.');
+			return $this->NetCommonsFrame->renderJson($this, 200, $message);
 		}
 	}
 }
