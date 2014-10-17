@@ -11,7 +11,6 @@
  */
 
 App::uses('AppController', 'Controller');
-//App::uses('NetCommonsFrameAppController', 'NetCommons.Controller');
 
 /**
  * NotepadsApp Controller
@@ -19,7 +18,6 @@ App::uses('AppController', 'Controller');
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package app.Plugin.Notepads.Controller
  */
-//class NotepadsAppController extends NetCommonsFrameAppController {
 class NotepadsAppController extends AppController {
 
 /**
