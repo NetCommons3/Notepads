@@ -116,7 +116,7 @@ class Notepad extends NotepadsAppModel {
  *
  * @param int $blockId blocks.id
  * @param int $languageId languages.id
- * @param boolean $editable false:publish latest content|true:all latest content
+ * @param bool $editable false:publish latest content|true:all latest content
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @return array Notepad
  */
