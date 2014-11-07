@@ -10,6 +10,9 @@
  */
 
 App::uses('NotepadsController', 'Notepads.Controller');
+App::uses('NetCommonsFrameComponent', 'NetCommons.Controller/Component');
+App::uses('NetCommonsBlockComponent', 'NetCommons.Controller/Component');
+App::uses('NetCommonsRoomRoleComponent', 'NetCommons.Controller/Component');
 
 /**
  * NotepadsController Test Case
@@ -26,8 +29,6 @@ class NotepadsControllerTest extends ControllerTestCase {
  * @var array
  */
 	public $fixtures = array(
-		'site_setting',
-		'plugin.pages.page',
 		'plugin.notepads.notepad',
 		'plugin.notepads.frame',
 		'plugin.notepads.frames_language',
